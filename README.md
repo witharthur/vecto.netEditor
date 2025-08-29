@@ -1,4 +1,4 @@
-Simple Image Editor
+##Simple Image Editor
 
 A clean and lightweight image editor that allows you to apply blur effects with a customizable blur radius slider. Designed for simplicity and smooth user experience.
 
