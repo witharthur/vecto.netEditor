@@ -1,4 +1,5 @@
-<h1 style="color:red;">WARNING</h1>
+<h2 style="color:red;">⚡ Finished & Ready Version</h2>
+<p>This branch (<code>independent-form-components</code>) is the final variant of the editor with fully independent form components and polished UI.</p>
 
 Simple Image Editor
 
