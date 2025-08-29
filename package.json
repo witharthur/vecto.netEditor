@@ -1,1 +1,11 @@
+{
+  "name": "blazor-host",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "serve -s out/wwwroot -l 3000"
+  },
+  "dependencies": {
+    "serve": "^14.2.0"
+  }
+}
 
