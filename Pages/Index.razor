@@ -1,58 +1,170 @@
-@page "/imageeditor"
+@page "/"
 @using System.ComponentModel
 @using ImagePluginFramework.Models
 @using ImagePluginFramework.Plugins
 @using Microsoft.AspNetCore.Components.Forms
 @inject HttpClient Http
 
-<h3 class="editor-title">Simple Image Editor</h3>
+<h3 class="editor-title">Simple Image Editor - 3 Independent Editors</h3>
 
+@* Первый редактор *@
 <div class="editor-container">
-    <!-- Controls Panel -->
-    @if (!isApplied)
+    <h4>Editor 1</h4>
+    @if (!isApplied1)
     {
         <div class="controls-panel">
             <div class="effect-checkboxes">
-                <label><input type="checkbox" @bind="Effects.Blur" /> Blur</label>
-                <label><input type="checkbox" @bind="Effects.Grayscale" /> Grayscale</label>
-                <label><input type="checkbox" @bind="Effects.Invert" /> Invert</label>
+                <label><input type="checkbox" @bind="Effects1.Blur" /> Blur</label>
+                <label><input type="checkbox" @bind="Effects1.Grayscale" /> Grayscale</label>
+                <label><input type="checkbox" @bind="Effects1.Invert" /> Invert</label>
             </div>
 
             <div class="slider-control">
-                <label>Blur Radius: @Effects.Radius px</label>
-                <input type="range" min="0" max="50" @bind="Effects.Radius" />
+                <label>Blur Radius: @Effects1.Radius px</label>
+                <input type="range" min="0" max="50" @bind="Effects1.Radius" />
             </div>
 
             <div class="slider-control">
-                <label>Border Radius: @Effects.BorderRadius px</label>
-                <input type="range" min="0" max="50" @bind="Effects.BorderRadius" />
+                <label>Border Radius: @Effects1.BorderRadius px</label>
+                <input type="range" min="0" max="50" @bind="Effects1.BorderRadius" />
             </div>
 
             <div class="size-control">
                 <label>Size (%):</label>
-                <input type="number" min="10" max="300" @bind="Effects.Size" />
+                <input type="number" min="10" max="300" @bind="Effects1.Size" />
             </div>
 
             <div class="editor-buttons">
-                <InputFile OnChange="OnFileSelected" class="file-input" />
-                <button @onclick="ApplyEffects">Apply Changes</button>
+                <InputFile OnChange="@((e) => OnFileSelected(e, 1))" class="file-input" />
+                <button @onclick="@(() => ApplyEffects(1))">Apply Changes</button>
             </div>
         </div>
     }
 
-    <!-- Image Preview -->
     <div class="image-preview">
-        @if (currentImage != null)
+        @if (currentImage1 != null)
         {
-            <img src="@currentImageDataUrl" alt="Preview" style="
-                width:@Effects.Size%;
-                height:@Effects.Size%;
-                border:1px solid #ccc;
-                display:block;
-                filter:@GetCssFilters();
-                border-radius:@Effects.BorderRadiusPx;
-                transition: all 0.3s ease;
-            " />
+            <img src="@currentImageDataUrl1" alt="Preview 1" style="
+                    width:@Effects1.Size%;
+                    height:@Effects1.Size%;
+                    border:1px solid #ccc;
+                    display:block;
+                    filter:@GetCssFilters(Effects1);
+                    border-radius:@Effects1.BorderRadiusPx;
+                    transition: all 0.3s ease;
+                " />
+        }
+        else
+        {
+            <div class="no-image-preview">
+                <span>No Image Selected</span>
+            </div>
+        }
+    </div>
+</div>
+
+@* Второй редактор *@
+<div class="editor-container">
+    <h4>Editor 2</h4>
+    @if (!isApplied2)
+    {
+        <div class="controls-panel">
+            <div class="effect-checkboxes">
+                <label><input type="checkbox" @bind="Effects2.Blur" /> Blur</label>
+                <label><input type="checkbox" @bind="Effects2.Grayscale" /> Grayscale</label>
+                <label><input type="checkbox" @bind="Effects2.Invert" /> Invert</label>
+            </div>
+
+            <div class="slider-control">
+                <label>Blur Radius: @Effects2.Radius px</label>
+                <input type="range" min="0" max="50" @bind="Effects2.Radius" />
+            </div>
+
+            <div class="slider-control">
+                <label>Border Radius: @Effects2.BorderRadius px</label>
+                <input type="range" min="0" max="50" @bind="Effects2.BorderRadius" />
+            </div>
+
+            <div class="size-control">
+                <label>Size (%):</label>
+                <input type="number" min="10" max="300" @bind="Effects2.Size" />
+            </div>
+
+            <div class="editor-buttons">
+                <InputFile OnChange="@((e) => OnFileSelected(e, 2))" class="file-input" />
+                <button @onclick="@(() => ApplyEffects(2))">Apply Changes</button>
+            </div>
+        </div>
+    }
+
+    <div class="image-preview">
+        @if (currentImage2 != null)
+        {
+            <img src="@currentImageDataUrl2" alt="Preview 2" style="
+                    width:@Effects2.Size%;
+                    height:@Effects2.Size%;
+                    border:1px solid #ccc;
+                    display:block;
+                    filter:@GetCssFilters(Effects2);
+                    border-radius:@Effects2.BorderRadiusPx;
+                    transition: all 0.3s ease;
+                " />
+        }
+        else
+        {
+            <div class="no-image-preview">
+                <span>No Image Selected</span>
+            </div>
+        }
+    </div>
+</div>
+
+@* Третий редактор *@
+<div class="editor-container">
+    <h4>Editor 3</h4>
+    @if (!isApplied3)
+    {
+        <div class="controls-panel">
+            <div class="effect-checkboxes">
+                <label><input type="checkbox" @bind="Effects3.Blur" /> Blur</label>
+                <label><input type="checkbox" @bind="Effects3.Grayscale" /> Grayscale</label>
+                <label><input type="checkbox" @bind="Effects3.Invert" /> Invert</label>
+            </div>
+
+            <div class="slider-control">
+                <label>Blur Radius: @Effects3.Radius px</label>
+                <input type="range" min="0" max="50" @bind="Effects3.Radius" />
+            </div>
+
+            <div class="slider-control">
+                <label>Border Radius: @Effects3.BorderRadius px</label>
+                <input type="range" min="0" max="50" @bind="Effects3.BorderRadius" />
+            </div>
+
+            <div class="size-control">
+                <label>Size (%):</label>
+                <input type="number" min="10" max="300" @bind="Effects3.Size" />
+            </div>
+
+            <div class="editor-buttons">
+                <InputFile OnChange="@((e) => OnFileSelected(e, 3))" class="file-input" />
+                <button @onclick="@(() => ApplyEffects(3))">Apply Changes</button>
+            </div>
+        </div>
+    }
+
+    <div class="image-preview">
+        @if (currentImage3 != null)
+        {
+            <img src="@currentImageDataUrl3" alt="Preview 3" style="
+                    width:@Effects3.Size%;
+                    height:@Effects3.Size%;
+                    border:1px solid #ccc;
+                    display:block;
+                    filter:@GetCssFilters(Effects3);
+                    border-radius:@Effects3.BorderRadiusPx;
+                    transition: all 0.3s ease;
+                " />
         }
         else
         {
@@ -64,90 +176,115 @@
 </div>
 
 <style>
-.editor-container {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-}
+    .editor-container {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+        border: 2px solid #e0e0e0;
+        border-radius: 15px;
+        padding: 15px;
+        background: #fafafa;
+    }
 
-.controls-panel {
-    flex: 1;
-    min-width: 250px;
-    background: #f7f7f7;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
+    .editor-container h4 {
+        width: 100%;
+        margin: 0 0 15px 0;
+        color: #333;
+        font-weight: bold;
+    }
 
-.effect-checkboxes label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: 500;
-}
+    .controls-panel {
+        flex: 1;
+        min-width: 250px;
+        background: #f7f7f7;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
 
-.slider-control, .size-control {
-    margin: 15px 0;
-}
+    .effect-checkboxes label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: 500;
+    }
 
-input[type="range"] {
-    width: 100%;
-}
+    .slider-control,
+    .size-control {
+        margin: 15px 0;
+    }
 
-.editor-buttons {
-    margin-top: 15px;
-    display: flex;
-    gap: 10px;
-}
+    input[type="range"] {
+        width: 100%;
+    }
 
-.editor-buttons button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 500;
-}
+    .editor-buttons {
+        margin-top: 15px;
+        display: flex;
+        gap: 10px;
+    }
 
-.editor-buttons button:hover {
-    background-color: #45a049;
-}
+    .editor-buttons button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+    }
 
-.image-preview {
-    flex: 2;
-    min-width: 300px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+    .editor-buttons button:hover {
+        background-color: #45a049;
+    }
 
-.no-image-preview {
-    width: 100%;
-    height: 300px;
-    border: 1px solid #ccc;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    background-color: #fafafa;
-    color: #777;
-    font-weight: 500;
-}
+    .image-preview {
+        flex: 2;
+        min-width: 300px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-.editor-title {
-    margin-bottom: 20px;
-}
+    .no-image-preview {
+        width: 100%;
+        height: 300px;
+        border: 1px solid #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        background-color: #fafafa;
+        color: #777;
+        font-weight: 500;
+    }
+
+    .editor-title {
+        margin-bottom: 20px;
+        text-align: center;
+    }
 </style>
 
 @code {
-    private string? currentImageDataUrl;
-    private Image? currentImage;
-    private Models.IImageEffect? myEffect;
-    private IBrowserFile? selectedFile;
-    private PluginManager pluginManager;
-    private bool isApplied = false;
+    // Переменные для первого редактора
+    private string? currentImageDataUrl1;
+    private Image? currentImage1;
+    private bool isApplied1 = false;
+    private ImageEffects Effects1 = new ImageEffects();
 
-    private ImageEffects Effects = new ImageEffects();
+    // Переменные для второго редактора
+    private string? currentImageDataUrl2;
+    private Image? currentImage2;
+    private bool isApplied2 = false;
+    private ImageEffects Effects2 = new ImageEffects();
+
+    // Переменные для третьего редактора
+    private string? currentImageDataUrl3;
+    private Image? currentImage3;
+    private bool isApplied3 = false;
+    private ImageEffects Effects3 = new ImageEffects();
+
+    private PluginManager pluginManager;
 
     protected override async Task OnInitializedAsync()
     {
@@ -155,15 +292,15 @@ input[type="range"] {
         await pluginManager.LoadPluginsAsync();
     }
 
-    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    private async Task OnFileSelected(InputFileChangeEventArgs e, int editorNumber)
     {
-        selectedFile = e.File;
+        var selectedFile = e.File;
         using var stream = selectedFile.OpenReadStream();
         using var ms = new MemoryStream();
         await stream.CopyToAsync(ms);
         var bytes = ms.ToArray();
 
-        currentImage = new Image
+        var image = new Image
         {
             Name = selectedFile.Name,
             Width = 800,
@@ -171,38 +308,92 @@ input[type="range"] {
             Data = bytes
         };
 
-        currentImageDataUrl = $"data:image/png;base64,{Convert.ToBase64String(currentImage.Data)}";
+        var dataUrl = $"data:image/png;base64,{Convert.ToBase64String(image.Data)}";
+
+        // Присваиваем к соответствующему редактору
+        switch (editorNumber)
+        {
+            case 1:
+                currentImage1 = image;
+                currentImageDataUrl1 = dataUrl;
+                break;
+            case 2:
+                currentImage2 = image;
+                currentImageDataUrl2 = dataUrl;
+                break;
+            case 3:
+                currentImage3 = image;
+                currentImageDataUrl3 = dataUrl;
+                break;
+        }
     }
 
-    private void ApplyEffects()
+    private void ApplyEffects(int editorNumber)
     {
-        if (currentImage == null) return;
+        Image? targetImage = null;
+        ImageEffects targetEffects = null;
 
-        if (Effects.Blur)
+        // Получаем соответствующие объекты для редактора
+        switch (editorNumber)
         {
-            myEffect = pluginManager.CreateEffect("Blur", Effects.Radius.ToString());
-            if (myEffect != null)
-                currentImage.AddEffect(myEffect);
+            case 1:
+                targetImage = currentImage1;
+                targetEffects = Effects1;
+                break;
+            case 2:
+                targetImage = currentImage2;
+                targetEffects = Effects2;
+                break;
+            case 3:
+                targetImage = currentImage3;
+                targetEffects = Effects3;
+                break;
         }
 
-        if (Effects.Grayscale)
+        if (targetImage == null || targetEffects == null) return;
+
+        Models.IImageEffect? myEffect;
+
+        if (targetEffects.Blur)
+        {
+            myEffect = pluginManager.CreateEffect("Blur", targetEffects.Radius.ToString());
+            if (myEffect != null)
+                targetImage.AddEffect(myEffect);
+        }
+
+        if (targetEffects.Grayscale)
         {
             myEffect = pluginManager.CreateEffect("Grayscale");
             if (myEffect != null)
-                currentImage.AddEffect(myEffect);
+                targetImage.AddEffect(myEffect);
         }
 
-        if (Effects.Invert)
+        if (targetEffects.Invert)
         {
             myEffect = pluginManager.CreateEffect("Invert");
             if (myEffect != null)
-                currentImage.AddEffect(myEffect);
+                targetImage.AddEffect(myEffect);
         }
 
-        currentImage.ApplyEffects();
-        currentImageDataUrl = $"data:image/png;base64,{Convert.ToBase64String(currentImage.Data)}";
+        targetImage.ApplyEffects();
+        var newDataUrl = $"data:image/png;base64,{Convert.ToBase64String(targetImage.Data)}";
 
-        isApplied = true; // Hide controls
+        // Обновляем соответствующие переменные
+        switch (editorNumber)
+        {
+            case 1:
+                currentImageDataUrl1 = newDataUrl;
+                isApplied1 = true;
+                break;
+            case 2:
+                currentImageDataUrl2 = newDataUrl;
+                isApplied2 = true;
+                break;
+            case 3:
+                currentImageDataUrl3 = newDataUrl;
+                isApplied3 = true;
+                break;
+        }
     }
 
     public class ImageEffects : INotifyPropertyChanged
@@ -233,15 +424,15 @@ input[type="range"] {
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string name) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 
-    private string GetCssFilters()
+    private string GetCssFilters(ImageEffects effects)
     {
         var filters = "";
-        if (Effects.Blur) filters += $"blur({Effects.Radius}px) ";
-        if (Effects.Grayscale) filters += "grayscale(100%) ";
-        if (Effects.Invert) filters += "invert(100%) ";
+        if (effects.Blur) filters += $"blur({effects.Radius}px) ";
+        if (effects.Grayscale) filters += "grayscale(100%) ";
+        if (effects.Invert) filters += "invert(100%) ";
         return filters.Trim();
     }
 }
