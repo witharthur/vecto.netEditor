@@ -1,6 +1,6 @@
 Simple Image Editor
 
-![](https://github.com/witharthur/vecto.netEditor/blob/main/Screenshot%202025-08-29%20174853.png))
+![](https://github.com/witharthur/vecto.netEditor/blob/main/Screenshot%202025-08-29%20174853.png)
 
 A clean and lightweight image editor that allows you to apply blur effects with a customizable blur radius slider. Designed for simplicity and smooth user experience.
 
