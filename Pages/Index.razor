@@ -1,0 +1,147 @@
+@page "/imageeditor"
+@using System.ComponentModel
+@using ImagePluginFramework.Models
+@using ImagePluginFramework.Plugins
+@using Microsoft.AspNetCore.Components.Forms
+@inject HttpClient Http
+
+<h3>Simple Image Editor</h3>
+
+<div class="editor-controls">
+    <div>
+        <label><input type="checkbox" @bind="Effects.Blur" /> Blur</label>
+        <label><input type="checkbox" @bind="Effects.Grayscale" /> Grayscale</label>
+        <label><input type="checkbox" @bind="Effects.Invert" /> Invert</label>
+    </div>
+
+    <div>
+        <label>Radius: @Effects.Radius</label>
+        <input type="range" min="0" max="50" @bind="Effects.Radius" />
+    </div>
+
+    <div>
+        <label>Size (%):</label>
+        <input type="number" min="10" max="300" @bind="Effects.Size" />
+    </div>
+</div>
+
+<div class="image-preview">
+    @if (currentImage != null)
+    {
+        <img src="@currentImageDataUrl" alt="Preview" style="
+            width:@Effects.Size%;
+            height:@Effects.Size%;
+            border:1px solid #ccc;
+            display:block;
+            filter:@GetCssFilters();
+            transition: all 0.2s;
+        " />
+    }
+    else
+    {
+        <div style="width:@Effects.Size%; height:@Effects.Size%; border:1px solid #ccc; display:flex; align-items:center; justify-content:center;">
+            <span>No Image Selected</span>
+        </div>
+    }
+</div>
+
+<div class="editor-buttons" style="margin-top:10px;">
+    <InputFile OnChange="OnFileSelected" />
+    <button @onclick="ApplyEffects">Apply Changes</button>
+</div>
+
+@code {
+    private string? currentImageDataUrl;
+    private Image? currentImage;
+    private Models.IImageEffect? myEffect;
+    private IBrowserFile? selectedFile;
+
+    private PluginManager pluginManager;
+
+    protected override async Task OnInitializedAsync()
+    {
+        pluginManager = new PluginManager(Http);
+        await pluginManager.LoadPluginsAsync();
+    }
+
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File;
+        using var stream = selectedFile.OpenReadStream();
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+        var bytes = ms.ToArray();
+
+        currentImage = new Image
+        {
+            Name = selectedFile.Name,
+            Width = 800,
+            Height = 600,
+            Data = bytes
+        };
+
+        currentImageDataUrl = $"data:image/png;base64,{Convert.ToBase64String(currentImage.Data)}";
+    }
+
+    private void ApplyEffects()
+    {
+        if (currentImage == null) return;
+
+        if (Effects.Blur)
+        {
+            myEffect = pluginManager.CreateEffect("Blur", Effects.Radius.ToString());
+            if (myEffect != null)
+                currentImage.AddEffect(myEffect);
+        }
+
+        if (Effects.Grayscale)
+        {
+            myEffect = pluginManager.CreateEffect("Grayscale");
+            if (myEffect != null)
+                currentImage.AddEffect(myEffect);
+        }
+
+        if (Effects.Invert)
+        {
+            myEffect = pluginManager.CreateEffect("Invert");
+            if (myEffect != null)
+                currentImage.AddEffect(myEffect);
+        }
+
+        currentImage.ApplyEffects();
+        currentImageDataUrl = $"data:image/png;base64,{Convert.ToBase64String(currentImage.Data)}";
+    }
+
+    private ImageEffects Effects = new ImageEffects();
+
+    public class ImageEffects : INotifyPropertyChanged
+    {
+        private bool blur;
+        public bool Blur { get => blur; set { blur = value; OnPropertyChanged(nameof(Blur)); } }
+
+        private bool grayscale;
+        public bool Grayscale { get => grayscale; set { grayscale = value; OnPropertyChanged(nameof(Grayscale)); } }
+
+        private bool invert;
+        public bool Invert { get => invert; set { invert = value; OnPropertyChanged(nameof(Invert)); } }
+
+        private int radius = 0;
+        public int Radius { get => radius; set { radius = value; OnPropertyChanged(nameof(Radius)); } }
+
+        private int size = 100;
+        public int Size { get => size; set { size = value; OnPropertyChanged(nameof(Size)); } }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged(string name) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
+
+    private string GetCssFilters()
+    {
+        var filters = "";
+        if (Effects.Blur) filters += $"blur({Effects.Radius}px) ";
+        if (Effects.Grayscale) filters += "grayscale(100%) ";
+        if (Effects.Invert) filters += "invert(100%) ";
+        return filters.Trim();
+    }
+}

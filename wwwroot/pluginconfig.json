@@ -1,0 +1,7 @@
+{
+  "AvailablePlugins": [
+    { "Name": "Resize", "Type": "ImagePluginFramework.Plugins.ResizeEffect" },
+    { "Name": "Blur", "Type": "ImagePluginFramework.Plugins.BlurEffect" },
+    { "Name": "Grayscale", "Type": "ImagePluginFramework.Plugins.GrayscaleEffect" }
+  ]
+}
