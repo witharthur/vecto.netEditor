@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ImagePluginFramework")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7df8738e6f7e5759c7a6120d5db08e21325dcd4f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+51bb13ae5ae701cf2fb04cbe894b09045155e131")]
 [assembly: System.Reflection.AssemblyProductAttribute("ImagePluginFramework")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ImagePluginFramework")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

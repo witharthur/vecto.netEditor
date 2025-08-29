@@ -17,8 +17,13 @@
         </div>
 
         <div>
-            <label>Radius: @Effects.Radius</label>
+            <label>Blur Radius: @Effects.Radius px</label>
             <input type="range" min="0" max="50" @bind="Effects.Radius" />
+        </div>
+
+        <div>
+            <label>Border Radius: @Effects.BorderRadius px</label>
+            <input type="range" min="0" max="50" @bind="Effects.BorderRadius" />
         </div>
 
         <div>
@@ -42,6 +47,7 @@
             border:1px solid #ccc;
             display:block;
             filter:@GetCssFilters();
+            border-radius:@Effects.BorderRadiusPx;
             transition: all 0.2s;
         " />
     }
@@ -135,6 +141,16 @@
 
         private int size = 100;
         public int Size { get => size; set { size = value; OnPropertyChanged(nameof(Size)); } }
+
+        private int borderRadius = 0;
+        public int BorderRadius
+        {
+            get => borderRadius;
+            set { borderRadius = value; OnPropertyChanged(nameof(BorderRadius)); }
+        }
+
+        // Helper for CSS
+        public string BorderRadiusPx => $"{BorderRadius}px";
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string name) =>

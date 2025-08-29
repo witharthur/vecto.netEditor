@@ -23,7 +23,6 @@ function drawImageOnCanvas(canvasId, base64, size, radius) {
         canvas.height = size;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Draw with border radius
         const r = Math.min(radius, size / 2);
         ctx.beginPath();
         ctx.moveTo(r, 0);
@@ -38,7 +37,6 @@ function drawImageOnCanvas(canvasId, base64, size, radius) {
         ctx.closePath();
         ctx.clip();
 
-        // Center crop
         const minDim = Math.min(img.width, img.height);
         const sx = (img.width - minDim) / 2;
         const sy = (img.height - minDim) / 2;
