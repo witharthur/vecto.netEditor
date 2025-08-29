@@ -7,23 +7,31 @@
 
 <h3>Simple Image Editor</h3>
 
-<div class="editor-controls">
-    <div>
-        <label><input type="checkbox" @bind="Effects.Blur" /> Blur</label>
-        <label><input type="checkbox" @bind="Effects.Grayscale" /> Grayscale</label>
-        <label><input type="checkbox" @bind="Effects.Invert" /> Invert</label>
-    </div>
+@if (!isApplied)
+{
+    <div class="editor-controls" style="margin-bottom:10px;">
+        <div>
+            <label><input type="checkbox" @bind="Effects.Blur" /> Blur</label>
+            <label><input type="checkbox" @bind="Effects.Grayscale" /> Grayscale</label>
+            <label><input type="checkbox" @bind="Effects.Invert" /> Invert</label>
+        </div>
 
-    <div>
-        <label>Radius: @Effects.Radius</label>
-        <input type="range" min="0" max="50" @bind="Effects.Radius" />
-    </div>
+        <div>
+            <label>Radius: @Effects.Radius</label>
+            <input type="range" min="0" max="50" @bind="Effects.Radius" />
+        </div>
 
-    <div>
-        <label>Size (%):</label>
-        <input type="number" min="10" max="300" @bind="Effects.Size" />
+        <div>
+            <label>Size (%):</label>
+            <input type="number" min="10" max="300" @bind="Effects.Size" />
+        </div>
+
+        <div class="editor-buttons" style="margin-top:10px;">
+            <InputFile OnChange="OnFileSelected" />
+            <button @onclick="ApplyEffects">Apply Changes</button>
+        </div>
     </div>
-</div>
+}
 
 <div class="image-preview">
     @if (currentImage != null)
@@ -45,18 +53,15 @@
     }
 </div>
 
-<div class="editor-buttons" style="margin-top:10px;">
-    <InputFile OnChange="OnFileSelected" />
-    <button @onclick="ApplyEffects">Apply Changes</button>
-</div>
-
 @code {
     private string? currentImageDataUrl;
     private Image? currentImage;
     private Models.IImageEffect? myEffect;
     private IBrowserFile? selectedFile;
-
     private PluginManager pluginManager;
+    private bool isApplied = false;
+
+    private ImageEffects Effects = new ImageEffects();
 
     protected override async Task OnInitializedAsync()
     {
@@ -110,9 +115,9 @@
 
         currentImage.ApplyEffects();
         currentImageDataUrl = $"data:image/png;base64,{Convert.ToBase64String(currentImage.Data)}";
-    }
 
-    private ImageEffects Effects = new ImageEffects();
+        isApplied = true; // Hide controls
+    }
 
     public class ImageEffects : INotifyPropertyChanged
     {
