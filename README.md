@@ -1,3 +1,5 @@
+<h1 style="color:red;">WARNING</h1>
+
 Simple Image Editor
 
 ![](https://github.com/witharthur/vecto.netEditor/blob/main/Screenshot%202025-08-29%20174853.png)
