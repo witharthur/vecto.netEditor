@@ -111,4 +111,38 @@ code {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
+}.editor-container {
+    display: flex;
+    gap: 20px;
+}
+
+.controls-panel {
+    flex: 1;
+    background: #f7f7f7;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.image-preview {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+input[type="range"] {
+    width: 100%;
+}
+
+.editor-buttons button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.editor-buttons button:hover {
+    background-color: #45a049;
 }
